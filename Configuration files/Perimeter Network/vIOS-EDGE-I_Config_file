@@ -1,0 +1,212 @@
+Building configuration...
+
+Current configuration : 5323 bytes
+!
+version 15.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname vIOS-EDGE-I
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 9 $9$suvaul/9rDGtdf$g7FLDviKEk3ibyLdYs73EgC4B7njAbSoEKV1grdrPG6
+!
+no aaa new-model
+!
+!
+!
+clock timezone UTC 1 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+ip domain name companyXYZ.sk
+ip name-server 195.1.1.161
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+username admin secret 9 $9$Fm7GeWToEgqKnf$LxNU.c/./ZoCWYjyHsg7brpvfwc9ktv4SYZOhZw3x/M
+!
+redundancy
+!
+no cdp log mismatch duplex
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ description Management
+ ip address 10.1.1.5 255.255.255.255
+!
+interface GigabitEthernet0/0
+ description Link to ASA-DMZ-I
+ ip address 195.1.1.129 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/1
+ description Link to ISP1
+ ip address 198.10.10.2 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/2
+ description Link to ASAv-1
+ ip address 172.16.0.2 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/3
+ description Link to ISP2
+ ip address 197.10.10.2 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ media-type rj45
+!
+router bgp 64500
+ bgp log-neighbor-changes
+ network 195.1.1.0
+ neighbor isp-group peer-group
+ neighbor isp-group ttl-security hops 1
+ neighbor isp-group filter-list 10 out
+ neighbor 197.10.10.1 remote-as 64502
+ neighbor 197.10.10.1 peer-group isp-group
+ neighbor 197.10.10.1 password isp2md5pass
+ neighbor 198.10.10.1 remote-as 64501
+ neighbor 198.10.10.1 peer-group isp-group
+ neighbor 198.10.10.1 password isp1md5pass
+ neighbor 198.10.10.1 route-map setlocalin in
+!
+ip forward-protocol nd
+!
+ip as-path access-list 10 permit ^$
+!
+no ip http server
+no ip http secure-server
+ip nat pool 1 195.1.1.1 195.1.1.127 netmask 255.255.255.128
+ip nat inside source list 1 pool 1 overload
+ip route 10.0.0.0 255.0.0.0 172.16.0.1
+ip route 172.16.0.0 255.255.0.0 172.16.0.1
+ip route 192.168.0.0 255.255.192.0 172.16.0.1
+ip route 195.1.1.0 255.255.255.0 Null0
+ip route 195.1.1.128 255.255.255.128 195.1.1.130
+ip ssh version 2
+!
+ip access-list standard ssh-access
+ permit 192.168.40.0 0.0.0.255
+ deny   any
+!
+logging trap notifications
+logging source-interface Loopback0
+logging host 172.16.50.1
+ipv6 ioam timestamp
+!
+route-map setlocalin permit 10
+ set local-preference 150
+!
+!
+access-list 1 permit 192.168.10.0 0.0.0.255
+access-list 1 permit 192.168.20.0 0.0.0.255
+access-list 1 permit 192.168.30.0 0.0.0.255
+access-list 1 permit 192.168.40.0 0.0.0.255
+access-list 1 permit 10.0.0.0 0.0.0.255
+access-list 1 permit 10.1.1.0 0.0.0.255
+access-list 1 permit 172.16.0.0 0.0.0.255
+access-list 1 permit 172.16.50.0 0.0.0.255
+access-list 1 deny   any
+!
+control-plane
+!
+banner exec ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner incoming ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner login ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ access-class ssh-access in
+ login local
+ transport input ssh
+line vty 5 924
+ access-class ssh-access in
+ login local
+ transport input ssh
+!
+no scheduler allocate
+ntp source Loopback0
+ntp server 172.16.50.1
+!
+end
