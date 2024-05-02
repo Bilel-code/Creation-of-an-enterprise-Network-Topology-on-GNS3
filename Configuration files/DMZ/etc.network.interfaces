@@ -1,0 +1,17 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto ens3
+iface ens3 inet static
+address 195.1.1.161
+gateway 196.1.1.166
+netmask 255.255.255.248
+broadcast 196.1.1.167
+dns-nameservers 195.1.1.161
