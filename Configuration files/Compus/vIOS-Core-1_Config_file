@@ -1,0 +1,246 @@
+Building configuration...
+
+Current configuration : 5529 bytes
+!
+! Last configuration change at 01:17:35 UTC0 Thu May 2 2024
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname vIOS-Core-1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$78b3$xtQa1A6wFCybA2fbZZWeU.
+!
+username admin privilege 15 secret 5 $1$SUUR$R.rWrThT1MWlk/GocKXzc0
+aaa new-model
+!
+!
+aaa authentication login default group radius local
+aaa authentication enable default group radius enable
+aaa authorization console
+aaa authorization exec default group radius local
+!
+!
+!
+!
+!
+!
+aaa session-id common
+clock timezone UTC0 1 0
+!
+!
+!
+!
+!
+!
+!
+!
+ip domain-name companyXYZ.sk
+ip name-server 172.16.50.1
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 10.1.1.1 255.255.255.255
+ ip ospf message-digest-key 1 md5 7 14543F123C05393865786061
+!
+interface GigabitEthernet0/0
+ description Link to vIOS-Core-2
+ no switchport
+ ip address 10.0.0.5 255.255.255.252
+ ip ospf message-digest-key 1 md5 7 15512615342B383769636676
+ ip ospf network point-to-point
+ negotiation auto
+!
+interface GigabitEthernet0/1
+ description Link to vEOS-Dis-II
+ no switchport
+ ip address 10.0.0.18 255.255.255.252
+ ip ospf message-digest-key 1 md5 7 01502B1D6B0A151C601C1D5D
+ ip ospf network point-to-point
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ description Link to vEOS-Dis-I
+ no switchport
+ ip address 10.0.0.10 255.255.255.252
+ ip ospf message-digest-key 1 md5 7 03477612360E325F0F594A51
+ ip ospf network point-to-point
+ negotiation auto
+!
+interface GigabitEthernet0/3
+ description Link to ASAv-1
+ no switchport
+ ip address 172.16.0.10 255.255.255.252
+ ip ospf message-digest-key 1 md5 7 05482B16114D5D1A58554446
+ negotiation auto
+!
+interface GigabitEthernet1/0
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/1
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/2
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/3
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/0
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/1
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/2
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/3
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/0
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/1
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/2
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/3
+ description Unused
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+router ospf 1
+ router-id 10.1.1.1
+ area 0 authentication message-digest
+ network 10.0.0.4 0.0.0.3 area 0
+ network 10.0.0.8 0.0.0.3 area 0
+ network 10.0.0.16 0.0.0.3 area 0
+ network 10.1.1.1 0.0.0.0 area 0
+ network 172.16.0.8 0.0.0.3 area 0
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip ssh version 2
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+ip radius source-interface Loopback0
+logging trap notifications
+logging source-interface Loopback0
+logging host 172.16.50.1
+!
+!
+!
+!
+!
+radius server Server1
+ address ipv4 172.16.50.1 auth-port 1812 acct-port 1813
+ key 7 021201481F575D72
+!
+!
+control-plane
+!
+banner exec ^C
+IOSv - Cisco Systems Confidential -
+
+Supplemental End User License Restrictions
+
+This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
+
+By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
+^C
+banner incoming ^C
+IOSv - Cisco Systems Confidential -
+
+Supplemental End User License Restrictions
+
+This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
+
+By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
+^C
+banner login ^C
+IOSv - Cisco Systems Confidential -
+
+Supplemental End User License Restrictions
+
+This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
+
+By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
+^C
+!
+line con 0
+line aux 0
+line vty 0 4
+!
+ntp source Loopback0
+ntp server 172.16.50.1
+!
+end
