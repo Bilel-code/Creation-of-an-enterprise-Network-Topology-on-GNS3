@@ -1,0 +1,233 @@
+Building configuration...
+
+Current configuration : 5295 bytes
+!
+! Last configuration change at 02:33:13 mytimez Thu May 2 2024
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname vIOS-Ser-I
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$exdM$B0mb.myrmFM2UV2iT29.71
+!
+username admin privilege 15 secret 5 $1$TFKh$mWcFYm.aW6zma8.TC/hWl0
+aaa new-model
+!
+!
+aaa authentication login default group radius local
+aaa authentication enable default group radius enable
+aaa authorization console
+aaa authorization exec default group radius local
+!
+!
+!
+!
+!
+!
+aaa session-id common
+clock timezone mytimez 2 0
+!
+!
+!
+!
+!
+!
+!
+!
+ip domain-name companyXYZ.sk
+ip name-server 172.16.50.1
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 10.1.1.4 255.255.255.255
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 #MyPass!034
+!
+interface Port-channel1
+ switchport access vlan 50
+ switchport mode access
+!
+interface GigabitEthernet0/0
+ description Link1 to ASAv-I
+ no switchport
+ ip address 172.16.0.6 255.255.255.252
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 #MyPass!034
+ negotiation auto
+!
+interface GigabitEthernet0/1
+ description Link2 to ASAv-I
+ no switchport
+ ip address 172.16.0.18 255.255.255.252
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 #MyPass!034
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ description Link to Server1
+ switchport access vlan 50
+ switchport mode access
+ media-type rj45
+ negotiation auto
+ channel-group 1 mode on
+!
+interface GigabitEthernet0/3
+ description Link2 to Server1
+ switchport access vlan 50
+ switchport mode access
+ media-type rj45
+ negotiation auto
+ channel-group 1 mode on
+!
+interface GigabitEthernet1/0
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/1
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/2
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/3
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/0
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/1
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/2
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/3
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/0
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/1
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/2
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/3
+ media-type rj45
+ negotiation auto
+!
+interface Vlan50
+ ip address 172.16.50.254 255.255.255.0
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 #MyPass!034
+!
+router ospf 1
+ router-id 10.1.1.4
+ passive-interface Vlan50
+ network 10.1.1.4 0.0.0.0 area 0
+ network 172.16.0.4 0.0.0.3 area 0
+ network 172.16.0.16 0.0.0.3 area 0
+ network 172.16.50.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip ssh version 2
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+ip radius source-interface Loopback0
+logging trap notifications
+logging source-interface Loopback0
+logging host 172.16.50.1
+!
+!
+!
+!
+!
+radius server Server1
+ address ipv4 172.16.50.1 auth-port 1812 acct-port 1813
+ key test123
+!
+!
+control-plane
+!
+banner exec ^C
+IOSv - Cisco Systems Confidential -
+
+Supplemental End User License Restrictions
+
+This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
+
+By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
+^C
+banner incoming ^C
+IOSv - Cisco Systems Confidential -
+
+Supplemental End User License Restrictions
+
+This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
+
+By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
+^C
+banner login ^C
+IOSv - Cisco Systems Confidential -
+
+Supplemental End User License Restrictions
+
+This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
+
+By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
+^C
+!
+line con 0
+ exec-timeout 0 0
+line aux 0
+line vty 5 1500
+!
+ntp source Loopback0
+ntp server 172.16.50.1
+!
+end
