@@ -19,3 +19,4 @@ posture of the corporate network. The insights gained from this phase are intend
 enhance the network’s defenses and ensure robust security measures are in place to protect
 against potential insider threats.
 
+#Go to the topology.png 
