@@ -1,22 +1,76 @@
-# PROJECT-NETWORK
-Our project aims to develop an advanced and comprehensive network topology for a cor-
-porate entity, encompassing a campus infrastructure, data center facilities, DMZ (Demil-
-itarized Zone) network segments, and integration with Internet Service Providers (ISPs).
-The software we used is Gns3 , it’s a network software emulator first released in 2008 that
-allows the combination of virtual and real devices, used to simulate complex networks. It
-uses Dynamips emulation software to simulate Cisco IOS.
+# Enterprise Network Topology on GNS3
 
-#  Second phase : Attack 
-In the second phase of our project, the objective was to evaluate the security resilience of
-the advanced network topology developed in the first phase by simulating insider attacks.
-Unlike external penetration tests, insider attacks are conducted by individuals who already
-have authorized access to the network, making them potentially more damaging and
-harder to detect.
-This phase involved a series of controlled insider attack scenarios designed to identify
-vulnerabilities that could be exploited by malicious insiders.
-Understanding the impact of insider threats is critical for improving the overall security
-posture of the corporate network. The insights gained from this phase are intended to
-enhance the network’s defenses and ensure robust security measures are in place to protect
-against potential insider threats.
+A two-phase network security project: **design** of a full enterprise network topology, followed by **insider attack simulations** to evaluate its security resilience.
 
-#Go to the topology.png 
+![GNS3](https://img.shields.io/badge/GNS3-Network%20Emulator-00ADEF?logo=cisco&logoColor=white)
+![Python](https://img.shields.io/badge/Python-Attack%20Scripts-3776AB?logo=python&logoColor=white)
+![Networking](https://img.shields.io/badge/Cisco-IOS%20%2F%20Routing-1BA0D7?logo=cisco&logoColor=white)
+![Security](https://img.shields.io/badge/Security-Insider%20Attacks-red)
+
+---
+
+## 📌 Overview
+
+This project develops an **advanced enterprise network topology** for a corporate entity using GNS3, then stress-tests it by simulating realistic **insider attacks**. GNS3 is a network emulator that combines virtual and real devices to simulate complex networks using Cisco IOS via Dynamips.
+
+---
+
+## 🏗️ Phase 1 — Network Design
+
+The topology covers all major components of a real enterprise network:
+
+- **Campus network** — end-user workstations, VLANs, access/distribution/core switching layers
+- **Data Center** — servers with redundant connectivity
+- **DMZ (Demilitarised Zone)** — public-facing services isolated from the internal network
+- **ISP integration** — internet connectivity with BGP/routing toward upstream providers
+- **Firewall & Security Group** — perimeter protection between zones
+
+> See [`Topology.png`](./Topology.png) for the full network diagram.
+
+---
+
+## 🔥 Phase 2 — Insider Attack Simulations
+
+Unlike external penetration tests, insider attacks are conducted by individuals who already have authorised access to the network, making them potentially more damaging and harder to detect.
+
+Three attack scenarios were simulated using Python scripts with Scapy:
+
+### Attack Scripts
+
+| Script | Attack Type | Description |
+|--------|------------|-------------|
+| `dhcpstarvation.py` | **DHCP Starvation** | Floods the DHCP server with fake MAC address requests to exhaust the IP address pool, denying new legitimate clients from getting an IP |
+| `dnspoisoning.py` | **DNS Poisoning** | Intercepts and forges DNS responses to redirect victims to malicious destinations |
+| `vlanhopping.py` | **VLAN Hopping** | Exploits misconfigured trunk ports to send traffic across VLANs that should be isolated |
+
+---
+
+## 📁 Project Structure
+
+```
+Creation-of-an-enterprise-Network-Topology-on-GNS3/
+├── Attack-scripts/
+│   ├── dhcpstarvation.py      # DHCP starvation attack
+│   ├── dnspoisoning.py        # DNS poisoning attack
+│   └── vlanhopping.py         # VLAN hopping attack
+├── Configuration files/       # Cisco device configurations
+├── Topology.png               # Full network diagram
+└── README.md
+```
+
+---
+
+## 🛠️ Tools & Technologies
+
+| Tool | Purpose |
+|------|---------|
+| GNS3 | Network topology emulation |
+| Cisco IOS (via Dynamips) | Router and switch emulation |
+| Python + Scapy | Attack script development |
+| VLANs, BGP, OSPF | Routing and segmentation protocols |
+
+---
+
+## ⚠️ Disclaimer
+
+All attack simulations were performed in a **controlled lab environment** for **educational purposes only**. The scripts and techniques described here must not be used on any real network without explicit authorisation. Unauthorised use may be illegal.
